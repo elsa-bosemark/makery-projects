@@ -1,0 +1,39 @@
+/* Makery typography: reusable roles, independent of component layout. */
+.ms-app {
+  --ms-font-body: "Makery Archivo", Arial, sans-serif;
+  --ms-font-heading: "Makery Newsreader", Georgia, serif;
+  --ms-type-h1: 500 clamp(30px, 3vw, 36px)/1.15 var(--ms-font-heading);
+  --ms-type-h2: 500 24px/1.2 var(--ms-font-heading);
+  --ms-type-h3: 600 16px/1.4 var(--ms-font-body);
+  --ms-type-h4: 600 14px/1.4 var(--ms-font-body);
+  --ms-type-h5: 600 13px/1.4 var(--ms-font-body);
+  --ms-type-body: 400 14px/1.5 var(--ms-font-body);
+  --ms-type-label: 500 13px/1.4 var(--ms-font-body);
+  --ms-type-subtext: 400 12px/1.45 var(--ms-font-body);
+  --ms-type-button: 600 14px/1.3 var(--ms-font-body);
+  --ms-type-brand: 500 24px/1 var(--ms-font-heading);
+  --ms-type-ruler: 400 3px/1 var(--ms-font-body);
+  font: var(--ms-type-body);
+}
+.ms-app :is(h1,.ms-type-h1,.ms-start-content h2) { font:var(--ms-type-h1); letter-spacing:-.02em; }
+.ms-app :is(h2,.ms-type-h2) { font:var(--ms-type-h2); letter-spacing:-.015em; }
+.ms-app :is(h3,.ms-type-h3) { font:var(--ms-type-h3); letter-spacing:normal; }
+.ms-app :is(h4,.ms-type-h4) { font:var(--ms-type-h4); letter-spacing:normal; }
+.ms-app :is(h5,.ms-type-h5) { font:var(--ms-type-h5); letter-spacing:normal; }
+.ms-app :is(p,li,.ms-type-body) { font:var(--ms-type-body); }
+.ms-app :is(label,legend,summary,.ms-type-label,.ms-control-label,.ms-layer-field-title,.ms-svg-field-label,.ms-segmented span,.ms-detail-stops,.ms-layer-sew-time) { font:var(--ms-type-label); }
+.ms-app :is(small,.ms-type-subtext,.ms-start-description,.ms-upload-image-queue p,.ms-start-upload span,.ms-start-upload small,.ms-start-gallery-heading>span,.ms-plan-result,.ms-layer-selection-hint,.ms-compact-layer-name small,.ms-color-swatch-button small,.ms-preview-fit,.ms-shirt-updating,.ms-processing,.ms-footer,.ms-hoop-choice-grid small,.ms-hoop-choice-grid button>span) { font:var(--ms-type-subtext); }
+.ms-app :is(input,select,textarea,.ms-type-value) { font:var(--ms-type-body); font-variant-numeric:tabular-nums; }
+.ms-app :is(button,.ms-type-button,.ms-map-link) { font:var(--ms-type-button); letter-spacing:normal; }
+.ms-app button :is(span,strong) { font:inherit; }
+/* Navigation and text actions use the label role, never a second button font. */
+.ms-app :is([role=tab],.ms-edit-history button,.ms-previous-stage,.ms-layer-reset,.ms-center-hoop,.ms-svg-layer-palette button,.ms-svg-layer-styles button,.ms-svg-flatten-actions button) { font:var(--ms-type-label); }
+.ms-app :is(.ms-start-upload strong,.ms-example-name strong,.ms-compact-layer-name strong) { font:var(--ms-type-h4); }
+.ms-app .ms-brand-copy strong { font:var(--ms-type-brand); }
+.ms-app .ms-brand-copy>span { font:var(--ms-type-subtext); letter-spacing:.04em; }
+.ms-app .ms-step-number { font:var(--ms-type-subtext); }
+/* SVG rulers use artwork coordinates rather than CSS pixels. */
+.ms-app .ms-stitch-rulers text { font:var(--ms-type-ruler); }
+.ms-app .ms-shirt-rulers text { font:var(--ms-type-body); }
+.ms-app .ms-panel-heading h2 { font:var(--ms-type-h2); }
+.ms-app .ms-panel-step { font:var(--ms-type-label); }

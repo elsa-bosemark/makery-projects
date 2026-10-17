@@ -1,0 +1,102 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Manrope:wght@300;400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 30 10% 94%;
+    --foreground: 0 0% 0%;
+
+    --card: 324 11% 91%;
+    --card-foreground: 0 0% 5%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 5%;
+
+    --primary: 183 99% 40%;
+    --primary-foreground: 0 0% 5%;
+
+    --secondary: 8 12% 74%;
+    --secondary-foreground: 0 0% 5%;
+
+    --muted: 324 11% 91%;
+    --muted-foreground: 0 0% 10%;
+
+    --accent: 11 23% 37%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 72% 50%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 8 10% 84%;
+    --input: 8 10% 84%;
+    --ring: 183 99% 40%;
+
+    --radius: 0.25rem;
+
+    --font-display: 'Manrope', sans-serif;
+    --font-body: 'DM Sans', sans-serif;
+
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    --background: 15 10% 12%;
+    --foreground: 320 5% 93%;
+    --card: 15 10% 16%;
+    --card-foreground: 320 5% 93%;
+    --popover: 15 10% 16%;
+    --popover-foreground: 320 5% 93%;
+    --primary: 183 99% 40%;
+    --primary-foreground: 0 0% 5%;
+    --secondary: 8 12% 28%;
+    --secondary-foreground: 320 5% 93%;
+    --muted: 15 10% 20%;
+    --muted-foreground: 0 0% 60%;
+    --accent: 208 23% 58%;
+    --accent-foreground: 320 5% 97%;
+    --destructive: 0 62.8% 40%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 15 10% 22%;
+    --input: 15 10% 22%;
+    --ring: 183 99% 40%;
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+html { scroll-behavior: smooth; }
+body { overflow-x: hidden; }
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-body);
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    font-weight: 300;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }

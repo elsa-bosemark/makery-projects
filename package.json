@@ -1,0 +1,40 @@
+{
+  "name": "makery-stitch",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview --host 127.0.0.1 --port 8081 --strictPort",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.30.1",
+    "lucide-react": "^0.462.0",
+    "@radix-ui/react-tabs": "^1.1.12",
+    "@radix-ui/react-slider": "^1.3.5",
+    "@radix-ui/react-switch": "^1.2.5",
+    "@radix-ui/react-dialog": "^1.1.14",
+    "clsx": "^2.1.1",
+    "tailwind-merge": "^2.6.0"
+  },
+  "devDependencies": {
+    "vite": "^5.4.19",
+    "@vitejs/plugin-react-swc": "^3.11.0",
+    "typescript": "^5.8.3",
+    "@types/node": "^22.16.5",
+    "@types/react": "^18.3.23",
+    "@types/react-dom": "^18.3.7",
+    "tailwindcss": "^3.4.17",
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.6",
+    "tailwindcss-animate": "^1.0.7",
+    "vitest": "^3.2.4"
+  },
+  "overrides": {
+    "@swc/core": "1.13.2"
+  }
+}

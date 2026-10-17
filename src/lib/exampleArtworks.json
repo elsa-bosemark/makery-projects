@@ -1,0 +1,97 @@
+[
+  {
+    "id": "gigi-shoe",
+    "name": "Shoe.png",
+    "url": "examples/gigi/shoe.png"
+  },
+  {
+    "id": "gigi-sunfish",
+    "name": "Sunfish.png",
+    "url": "examples/gigi/sunfish.png"
+  },
+  {
+    "id": "gigi-little-fish",
+    "name": "Little fish.png",
+    "url": "examples/gigi/little-fish.png"
+  },
+  {
+    "id": "gigi-striped-fish",
+    "name": "Striped fish.png",
+    "url": "examples/gigi/striped-fish.png"
+  },
+  {
+    "id": "gigi-whale",
+    "name": "Whale.png",
+    "url": "examples/gigi/whale.png"
+  },
+  {
+    "id": "gigi-rabbit",
+    "name": "Drawing rabbit.png",
+    "url": "examples/gigi/rabbit.png"
+  },
+  {
+    "id": "gigi-running-horse",
+    "name": "Running horse.png",
+    "url": "examples/gigi/running-horse.png"
+  },
+  {
+    "id": "gigi-goat",
+    "name": "Goat.png",
+    "url": "examples/gigi/goat.png"
+  },
+  {
+    "id": "gigi-winged-horse",
+    "name": "Winged horse.png",
+    "url": "examples/gigi/winged-horse.png"
+  },
+  {
+    "id": "gigi-make-learn",
+    "name": "Make learn.png",
+    "url": "examples/gigi/make-learn.png"
+  },
+  {
+    "id": "gigi-make-things",
+    "name": "Make things.png",
+    "url": "examples/gigi/make-things.png"
+  },
+  {
+    "id": "gigi-strawberries",
+    "name": "Strawberries.png",
+    "url": "examples/gigi/strawberries.png"
+  },
+  {
+    "id": "gigi-horse",
+    "name": "Horse.png",
+    "url": "examples/gigi/horse.png"
+  },
+  {
+    "id": "gigi-deer",
+    "name": "Deer.png",
+    "url": "examples/gigi/deer.png"
+  },
+  {
+    "id": "gigi-mouse",
+    "name": "Mouse.png",
+    "url": "examples/gigi/mouse.png"
+  },
+  {
+    "id": "gigi-outline-star",
+    "name": "Outline star.png",
+    "url": "examples/gigi/outline-star.png"
+  },
+  {
+    "id": "gigi-star",
+    "name": "Star.png",
+    "url": "examples/gigi/star.png"
+  },
+  {
+    "id": "gigi-sparkle",
+    "name": "Sparkle.png",
+    "url": "examples/gigi/sparkle.png"
+  },
+  {
+    "id": "gigi-small-outline-star",
+    "name": "Small outline star.png",
+    "url": "examples/gigi/small-outline-star.png"
+  }
+]
