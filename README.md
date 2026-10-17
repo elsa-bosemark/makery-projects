@@ -30,3 +30,11 @@ Uploaded artwork is processed in the browser. No API keys or server are required
 Typography roles and conventions are documented in [DESIGN.md](DESIGN.md).
 
 Generated stitch files should be reviewed and tested on scrap fabric before sewing a final garment.
+
+## Stitch planning
+
+Satin strokes use paired vector rails. Branches are partitioned into separate regions before rail fitting, with local width limits at junctions and suppression of crowded inner-edge penetrations. Light satin underlay follows the column center; the top stitches return along the column. Broad shape satins and explicitly horizontal/vertical shape satins retain the scanline split-stitch planner.
+
+Outline paths retain corners within a 0.1 mm simplification tolerance before stitch-length subdivision. Centerline running and bean stitches use the same curvature-aware planning. The choices in the interface remain Outline, Satin, and Tatami.
+
+Validation includes automated geometry and export tests plus independent `pystitch` decoding of fill, satin, and running PES fixtures. These checks establish file and path behavior; actual fabric, thread, stabilizer, and machine results still require a test sew.

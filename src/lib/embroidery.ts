@@ -1,3 +1,5 @@
+import { satinColumns } from './satinColumns';
+import { runningPath } from './runningPath';
 import { centerlines, sampleCenterline, splitBranches, splitByCuts, type ShapeCut } from './centerline';
 import { STITCH_STYLES, patternedStyle, patternPaths, fillPhase, type StitchStyle, type FillTexture } from './stitchStyles';
 import { DETAIL_LEVELS, stitchRecipe, type ImageDetail, type StitchCoverage } from './stitchPlanning';
@@ -337,7 +339,7 @@ export function digitize(raster: Raster, settings: Settings, overrides: LayerOve
       }).join('') : undefined,
       flattenMembers: edit.flattenMembers, fillDirection: edit.fillDirection ?? edit.direction ?? 'follow', satinDirection: edit.satinDirection ?? 'follow', strokeWidth: edit.strokeWidth,
       outline: edit.outline ?? recipe.outline, areaMm2: region.pixels.length * pixelMm * pixelMm, accentSlot, id, name: edit.name?.trim() || `Part ${partNumber}`, itemId: section?.id, itemName: section?.name, sourceColor: sourceThread.hex, color: palette[slot].hex, paletteSlot: slot, threadIndex: -1,
-      stitchType: edit.stitchType ?? (svgGeometry === 'perimeter' ? 'running' : useCenterline ? 'satin' : recipe.stitchType), spacing: edit.spacing ?? recipe.spacing, stitchLength: edit.stitchLength ?? (edit.stitchType === 'satin' || useCenterline ? 7 : recipe.stitchLength),
+      stitchType: edit.stitchType ?? (svgGeometry === 'perimeter' ? 'running' : useCenterline ? 'satin' : recipe.stitchType), spacing: edit.spacing ?? recipe.spacing, stitchLength: edit.stitchLength ?? (edit.stitchType === 'satin' || (useCenterline && edit.stitchType == null) ? 7 : Math.min(4,recipe.stitchLength)),
       direction: edit.fillDirection && edit.fillDirection !== 'follow' ? edit.fillDirection : edit.direction ?? recipe.direction, underlay: edit.underlay ?? recipe.underlay, visible: (edit.visible ?? true) && !paletteSettings.hiddenSlots?.includes(slot), passes: edit.passes ?? 1, texture: edit.texture ?? 'brick', patternSize: edit.patternSize ?? recipe.patternSize, stitchCount: 0,
       previewPath: geometry.path, previewBox: `${region.minX} ${region.minY} ${region.maxX - region.minX + 1} ${region.maxY - region.minY + 1}`,
       bounds: { x: (region.minX - width / 2) * pixelMm, y: (region.minY - height / 2) * pixelMm, width: (region.maxX - region.minX + 1) * pixelMm, height: (region.maxY - region.minY + 1) * pixelMm }
@@ -362,27 +364,43 @@ export function digitize(raster: Raster, settings: Settings, overrides: LayerOve
         begin(); tieOff();
         const points = outline.map(p => point(p.x, p.y));
         append(points[0], 'jump'); jumps++; append(points[0], 'stitch');
+        const lead=runningPath(points,stitchLength,1)[1];
+        if(lead){const length=Math.hypot(lead.x-points[0].x,lead.y-points[0].y),t=Math.min(1,5/(length||1));append({x:Math.round(points[0].x+(lead.x-points[0].x)*t),y:Math.round(points[0].y+(lead.y-points[0].y)*t)},'stitch');append(points[0],'stitch');}
         const outlineStitch = (p: Point) => {
           const previous = stitches[stitches.length - 1]; append(p, 'stitch');
           if (layer.stitchType === 'bean' && previous && (previous.x !== p.x || previous.y !== p.y)) { append(previous, 'stitch'); append(p, 'stitch'); }
         };
         for (let repeat = 0; repeat < layer.passes; repeat++) {
-          // Resample along the contour so image pixels do not become tiny needle steps.
-          let remaining = stitchLength;
-          for (let i = 1; i < points.length; i++) {
-            let a = points[i - 1], b = points[i], length = Math.hypot(b.x - a.x, b.y - a.y);
-            while (length >= remaining && length > 0) {
-              const t = remaining / length, next = { x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t };
-              outlineStitch({ x: Math.round(next.x), y: Math.round(next.y) });
-              a = next; length = Math.hypot(b.x - a.x, b.y - a.y); remaining = stitchLength;
-            }
-            remaining -= length;
-          }
-          outlineStitch(points[points.length - 1]);
+          for(const p of runningPath(points,stitchLength,1).slice(1))outlineStitch({x:Math.round(p.x),y:Math.round(p.y)});
         }
         tieOff();
       }
     };
+    if(layer.stitchType==='satin' && (layer.centerline || (edit.direction==null && Math.min(region.maxX-region.minX+1,region.maxY-region.minY+1)*pixelMm<=7))){
+      if(layer.strokeWidth!=null&&(!Number.isFinite(layer.strokeWidth)||layer.strokeWidth<.3||layer.strokeWidth>7))throw new Error('Stroke width must be between 0.3 and 7 mm.');
+      const columns=satinColumns(region,width,geometry.loops,pixelMm,layer.spacing,layer.strokeWidth,layer.satinDirection);
+      if(columns.length){
+        for(const column of columns){
+          begin();tieOff();
+          const start=point(column.center[0].x,column.center[0].y);append(start,'jump');jumps++;append(start,'stitch');
+          // A short tie-in stays along the center of the column.
+          const next=point(column.center[Math.min(2,column.center.length-1)].x,column.center[Math.min(2,column.center.length-1)].y);
+          const length=Math.hypot(next.x-start.x,next.y-start.y),fraction=Math.min(1,5/(length||1));
+          const lock={x:Math.round(start.x+(next.x-start.x)*fraction),y:Math.round(start.y+(next.y-start.y)*fraction)};
+          append(lock,'stitch');append(start,'stitch');
+          if(layer.underlay){for(const p of runningPath(column.center,2/pixelMm,.1/pixelMm).slice(1))stitchLine(stitches.at(-1)!,point(p.x,p.y));}
+          const indices=column.center.map((_,i)=>i);if(layer.underlay)indices.reverse();
+          let side=0;const previousSide:Point[]=[];
+          for(const i of indices){const rail=side%2?column.right:column.left,p=point(rail[i].x,rail[i].y),previous=previousSide[side%2];
+            // Skip crowded penetrations on the inside edge of a tight turn.
+            if(previous && Math.hypot(previous.x-p.x,previous.y-p.y)<2 && i!==indices.at(-1)){continue;}
+            stitchLine(stitches.at(-1)!,p);previousSide[side%2]=p;side++;
+          }
+          tieOff();
+        }
+        if(layer.outline)sewOutline();stitchKind=undefined;continue;
+      }
+    }
     const fillPaths = layer.stitchType === 'fill' && layer.fillDirection === 'follow' && geometry.loops.length === 1 && (region.pixels.length / ((region.maxX-region.minX+1)*(region.maxY-region.minY+1)) < .5 || Math.max(region.maxX-region.minX+1,region.maxY-region.minY+1)/Math.max(1,Math.min(region.maxX-region.minX+1,region.maxY-region.minY+1)) > 2) ? centerlines(region,width) : [];
     const followFill = fillPaths.some(path=>path.slice(1).reduce((length,p,i)=>length+Math.hypot(p.x-path[i].x,p.y-path[i].y),0)>Math.sqrt(region.pixels.length)*1.5);
     if (layer.centerline || followFill) {
@@ -402,8 +420,8 @@ export function digitize(raster: Raster, settings: Settings, overrides: LayerOve
           append(point(samples[0].x, samples[0].y), 'stitch');
           if (layer.stitchType === 'running' || layer.stitchType === 'bean') {
             for (let pass = 0; pass < layer.passes; pass++) {
-              const points = sampleCenterline(pass % 2 ? path.slice().reverse() : path, layer.stitchLength / pixelMm);
-              for (const p of points.slice(1)) stitchLine(stitches[stitches.length-1],point(p.x,p.y));
+              const points = runningPath(pass % 2 ? path.slice().reverse() : path,layer.stitchLength/pixelMm,.1/pixelMm);
+              for (const p of points.slice(1)){const previous=stitches.at(-1)!;const next=point(p.x,p.y);stitchLine(previous,next);if(layer.stitchType==='bean'){stitchLine(next,previous);stitchLine(previous,next);}}
             }
             tieOff(); continue;
           }
