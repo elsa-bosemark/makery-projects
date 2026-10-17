@@ -62,7 +62,7 @@ function planColumn(region:Region,width:number,loops:Point[][],pixelMm:number,sp
 
 /** Each graph branch owns a disjoint filled region before rail fitting. */
 export function satinColumns(region:Region,width:number,loops:Point[][],pixelMm:number,spacingMm:number,strokeWidth?:number,direction:'follow'|'horizontal'|'vertical'='follow'):SatinColumn[]{
- const pieces=splitBranches(region,width);
+ const pieces=splitBranches(region,width,Math.max(4,1/pixelMm));
  if(pieces.length===1)return planColumn(region,width,loops,pixelMm,spacingMm,strokeWidth,direction);
  const vectors=traceRegions(pieces,width,region.maxY+2,pixelMm);
  return pieces.flatMap((piece,i)=>planColumn(piece,width,vectors[i].loops,pixelMm,spacingMm,strokeWidth,direction));

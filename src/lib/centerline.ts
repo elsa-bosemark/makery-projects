@@ -74,8 +74,8 @@ export function sampleCenterline(path: Point[], step: number): Point[] {
 
 // Grow branch labels through the original mask: every source pixel belongs to
 // exactly one piece, so exploding cannot remove or duplicate artwork.
-export function splitBranches<T extends Region>(region: T, sourceWidth: number): T[] {
-  const paths = centerlines(region, sourceWidth).filter(path => path.length >= 4);
+export function splitBranches<T extends Region>(region: T, sourceWidth: number, minBranchLength = 4): T[] {
+  const paths = centerlines(region, sourceWidth).filter(path => path.slice(1).reduce((length,p,i)=>length+Math.hypot(p.x-path[i].x,p.y-path[i].y),0)>=minBranchLength);
   if (paths.length < 2) return [region];
   const pixels = new Set(region.pixels), labels = new Map<number, number>(), queue: number[] = [];
   paths.forEach((path, label) => {
